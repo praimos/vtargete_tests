@@ -2,3 +2,5 @@ env
 .idea
 /tests/.pytest_cache/
 /tests/*.png
+/src/utils/configs/authconf.ini
+/env_test/
