@@ -14,7 +14,7 @@ class HomeLkPage(BasePage):
         self.find_element(HomeLkPageLocators.LOCATOR_SELECT_AD).click()
 
     def select_lk(self):
-        self.find_element(HomeLkPageLocators.LOCATOR_LK_IN_MENU).click()
+        self.find_element(HomeLkPageLocators.LOCATOR_LK_IN_MENU, time=30).click()
 
     def select_my_ad(self):
-        self.find_element(HomeLkPageLocators.LOCATOR_MY_AD_IN_SUB_MENU).click()
+        self.find_element(HomeLkPageLocators.LOCATOR_MY_AD_IN_SUB_MENU, time=30).click()
