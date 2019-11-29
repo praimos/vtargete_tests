@@ -1,3 +1,5 @@
+import time
+
 from src.PageObjects.BaseApp import BasePage
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -20,21 +22,22 @@ class BillboardPageLocators:
     LOCATOR_CHECKBOX_ALL_FILTERS_INDETERMINATE = (By.XPATH,
                                               "//div[@ref=\"eSelect\"]/span[contains(@class, \"ag-icon-checkbox-indeterminate\")]")
     LOCATOR_PRELOADER = (By.XPATH, "//div[@class=\"el-loading-spinner\"]")
+    LOCATOR_PRELOADER2 = (By.XPATH, "div[@class=\"el-loading-mask\"]")
     LOCATOR_FILTER_CHECKBOXES = (By.XPATH, "//span[text()=\"Checkboxes\"]")
     LOCATOR_FILTER_COMMUNITY = (By.XPATH, "//span[text()=\"Сообщества\"]")
     LOCATOR_BUTTON_REFRESH = (By.XPATH, "//span/i[text()=\"refresh\"]")
-    LOCATOR_DELETE_ITEM_MENU = (By.CSS_SELECTOR, "body > div:nth-child(14) > div.el-scrollbar > div.el-select-dropdown__wrap.el-scrollbar__wrap > ul > li.el-select-dropdown__item")
+    LOCATOR_DELETE_ITEM_MENU = (By.XPATH, "/html/body/div[8]/div[1]/div[1]/ul/li[2]")
     LOCATOR_SELECT_ACTION = (By.XPATH, "//input[@placeholder=\"Выберите действие\"]")
     LOCATOR_ALL_GROUPS = (By.XPATH, "//label[contains(@class, \"box\")]")
     LOCATOR_ENTER_ON_FORM = (By.XPATH, "//button[@class='el-button el-button--info el-button--mini']")
-    LOCATOR_SAVE_CHANGES = (By.XPATH, "//*[@id=\"app\"]/section/section/header/div/div[1]/div[4]/button[2]")
+    LOCATOR_SAVE_CHANGES = (By.XPATH, "//*[@id='app']/section/section/header/div/div[1]/div[4]/button[2]")
     LOCATOR_SEARCH_G = (By.XPATH, "//input[@placeholder=\"Название...\"]")
 
 
 class BillboardPage(BasePage):
 
-    def wait_visibility_element(self, time=45):
-        WebDriverWait(self.driver, time).until(EC.visibility_of_all_elements_located(
+    def wait_visibility_element(self, timer=45):
+        WebDriverWait(self.driver, timer).until(EC.visibility_of_all_elements_located(
                 BillboardPageLocators.LOCATOR_ECENTERCONTAINER))
 
     def click_on_activity_in_groups(self):
@@ -49,11 +52,17 @@ class BillboardPage(BasePage):
         all_names = [x.text for x in all_item if len(x.text) > 0]
         return all_names
 
-    def wait_preloader(self, time=15):
-        WebDriverWait(self.driver, time).until(EC.visibility_of_all_elements_located(
+    def wait_preloader(self, timer=30):
+        WebDriverWait(self.driver, timer).until(EC.visibility_of_all_elements_located(
             BillboardPageLocators.LOCATOR_PRELOADER))
-        WebDriverWait(self.driver, time).until(EC.invisibility_of_element_located(
+        WebDriverWait(self.driver, timer).until(EC.invisibility_of_element_located(
             BillboardPageLocators.LOCATOR_PRELOADER))
+
+    def wait_preloader2(self, timer=30):
+        WebDriverWait(self.driver, timer).until(EC.visibility_of_all_elements_located(
+            BillboardPageLocators.LOCATOR_PRELOADER2))
+        WebDriverWait(self.driver, timer).until(EC.invisibility_of_element_located(
+            BillboardPageLocators.LOCATOR_PRELOADER2))
 
     def select_checkboxes(self):
         self.find_element(BillboardPageLocators.LOCATOR_FILTER_CHECKBOXES).click()
@@ -78,7 +87,7 @@ class BillboardPage(BasePage):
 
     def add_groups(self):
         self.find_element(BillboardPageLocators.LOCATOR_SEARCH_G).send_keys("Cats")
-        groups = self.find_elements(BillboardPageLocators.LOCATOR_ALL_GROUPS)
+        groups = self.find_elements(BillboardPageLocators.LOCATOR_ALL_GROUPS, time=30)
         index = 5
         for item in groups:
             if index != 0:
@@ -87,6 +96,9 @@ class BillboardPage(BasePage):
             else:
                 break
         self.find_element(BillboardPageLocators.LOCATOR_ENTER_ON_FORM).click()
+        time.sleep(3)
         self.find_element(BillboardPageLocators.LOCATOR_SAVE_CHANGES).click()
+
+
 
 

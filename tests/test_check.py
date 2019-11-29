@@ -15,7 +15,9 @@ def test_auth(browser):
     auth_vk_page.click_button()
 
     home_lk_page = HomeLkPage(browser)
+    time.sleep(1)
     home_lk_page.call_menu()
+    time.sleep(1)
     home_lk_page.select_lk()
     home_lk_page.select_my_ad()
 
@@ -25,18 +27,21 @@ def test_auth(browser):
     billboard_page.select_checkboxes()
     billboard_page.select_community()
     billboard_utils = BillboardUtils(browser)
-    time.sleep(5)
-
+    # billboard_utils.wait_element_click()
+    # time.sleep(20)
+    # billboard_page.delete_groups()
     billboard_utils.click_checkbox()
 
     billboard_utils.call_context_menu()
     billboard_utils.select_change_in_context_menu()
-    time.sleep(5)
+    # time.sleep(5)
     billboard_page.add_groups()
 
     # billboard_page.delete_group()
+    time.sleep(4)
     billboard_page.page_refresh()
-    billboard_page.wait_preloader()
-    time.sleep(15)
+    # billboard_page.wait_preloader2()
+    time.sleep(20)
+    # billboard_utils.wait_element_click()
     result = billboard_utils.check_result()
     assert ['5 шт.', '5 шт.', '5 шт.'] == result
