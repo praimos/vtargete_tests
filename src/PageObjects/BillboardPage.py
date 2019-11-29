@@ -4,6 +4,11 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
+def test_log(opa):
+    with open("file.log", "a+") as log:
+        log.write(opa)
+
+
 class BillboardPageLocators:
     LOCATOR_ECENTERCONTAINER = (By.XPATH, "//div[@ref=\"eCenterContainer\"]")
     LOCATOR_ACTIVITY_IN_GROUPS = (By.XPATH, "//span[text()=\"Активность в сообществах\"]")
@@ -18,6 +23,12 @@ class BillboardPageLocators:
     LOCATOR_FILTER_CHECKBOXES = (By.XPATH, "//span[text()=\"Checkboxes\"]")
     LOCATOR_FILTER_COMMUNITY = (By.XPATH, "//span[text()=\"Сообщества\"]")
     LOCATOR_BUTTON_REFRESH = (By.XPATH, "//span/i[text()=\"refresh\"]")
+    LOCATOR_DELETE_ITEM_MENU = (By.CSS_SELECTOR, "body > div:nth-child(14) > div.el-scrollbar > div.el-select-dropdown__wrap.el-scrollbar__wrap > ul > li.el-select-dropdown__item")
+    LOCATOR_SELECT_ACTION = (By.XPATH, "//input[@placeholder=\"Выберите действие\"]")
+    LOCATOR_ALL_GROUPS = (By.XPATH, "//label[contains(@class, \"box\")]")
+    LOCATOR_ENTER_ON_FORM = (By.XPATH, "//button[@class='el-button el-button--info el-button--mini']")
+    LOCATOR_SAVE_CHANGES = (By.XPATH, "//*[@id=\"app\"]/section/section/header/div/div[1]/div[4]/button[2]")
+    LOCATOR_SEARCH_G = (By.XPATH, "//input[@placeholder=\"Название...\"]")
 
 
 class BillboardPage(BasePage):
@@ -52,3 +63,30 @@ class BillboardPage(BasePage):
 
     def page_refresh(self):
         self.find_element(BillboardPageLocators.LOCATOR_BUTTON_REFRESH).click()
+
+    def delete_group(self):
+        self.find_element(BillboardPageLocators.LOCATOR_SELECT_ACTION).click()
+        self.driver.set_page_load_timeout(15)
+        menu_item = self.find_elements(BillboardPageLocators.LOCATOR_DELETE_ITEM_MENU)
+        menu_item.click()
+        list_groups = self.find_elements(BillboardPageLocators.LOCATOR_ALL_GROUPS)
+        if list_groups != '':
+            for group in list_groups:
+                group.click()
+        self.find_element(BillboardPageLocators.LOCATOR_ENTER_ON_FORM).click()
+        self.find_element(BillboardPageLocators.LOCATOR_SAVE_CHANGES).click()
+
+    def add_groups(self):
+        self.find_element(BillboardPageLocators.LOCATOR_SEARCH_G).send_keys("Cats")
+        groups = self.find_elements(BillboardPageLocators.LOCATOR_ALL_GROUPS)
+        index = 5
+        for item in groups:
+            if index != 0:
+                item.click()
+                index -= 1
+            else:
+                break
+        self.find_element(BillboardPageLocators.LOCATOR_ENTER_ON_FORM).click()
+        self.find_element(BillboardPageLocators.LOCATOR_SAVE_CHANGES).click()
+
+

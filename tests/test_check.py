@@ -24,12 +24,19 @@ def test_auth(browser):
     billboard_page.drop_all_filters()
     billboard_page.select_checkboxes()
     billboard_page.select_community()
-    # billboard_page.click_checkbox()
     billboard_utils = BillboardUtils(browser)
     time.sleep(5)
+
     billboard_utils.click_checkbox()
-    names = billboard_page.get_table_column_name()
-    # billboard_page.page_refresh()
-    # billboard_page.wait_preloader()
+
+    billboard_utils.call_context_menu()
+    billboard_utils.select_change_in_context_menu()
+    time.sleep(5)
+    billboard_page.add_groups()
+
+    # billboard_page.delete_group()
+    billboard_page.page_refresh()
+    billboard_page.wait_preloader()
     time.sleep(15)
-    assert "Checkboxes" and "Сообщества" in names
+    result = billboard_utils.check_result()
+    assert ['5 шт.', '5 шт.', '5 шт.'] == result
